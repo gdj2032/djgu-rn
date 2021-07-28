@@ -1,0 +1,70 @@
+{
+  "extends": ["tslint:recommended", "tslint-react", "tslint-eslint-rules"],
+  "linterOptions": {
+    "exclude": [
+      "node_modules"
+    ]
+  },
+  "rules": {
+    "arrow-parens": false,
+    "arrow-return-shorthand": [false],
+    "comment-format": false,
+    "import-blacklist": [true],
+    "interface-over-type-literal": false,
+    "interface-name": [true, "always-prefix"],
+    "max-line-length": false,
+    "member-access": false,
+    "member-ordering": false,
+    "newline-before-return": false,
+    "jsdoc-format": false,
+    "no-any": false,
+    "no-console": false,
+    "no-empty": false,
+    "no-empty-interface": false,
+    "no-inferrable-types": [true, "ignore-params", "ignore-properties"],
+    "no-invalid-this": [true, "check-function-in-method"],
+    "no-namespace": false,
+    "no-null-keyword": false,
+    "no-require-imports": false,
+    "no-submodule-imports": [false, "@"],
+    "no-this-assignment": [true, { "allow-destructuring": true }],
+    "no-trailing-whitespace": true,
+    "no-duplicate-variable": true,
+    "no-unused-expression": [true, "allow-fast-null-checks"],
+    "object-literal-sort-keys": false,
+    "object-literal-shorthand": false,
+    "one-variable-per-declaration": [false],
+    "only-arrow-functions": [true, "allow-declarations"],
+    "ordered-imports": [false],
+    "prefer-method-signature": false,
+    "prefer-template": [true, "allow-single-concat"],
+    "quotemark": [true, "single"],
+    "semicolon": [false, "always", "ignore-bound-class-methods"],
+    "trailing-comma": [
+      false,
+      {
+        "singleline": "never",
+        "multiline": {
+          "objects": "always",
+          "arrays": "always",
+          "functions": "ignore",
+          "typeLiterals": "ignore"
+        },
+        "esSpecCompliant": true
+      }
+    ],
+    "triple-equals": [true, "allow-null-check"],
+    "type-literal-delimiter": true,
+    "typedef": [true, "parameter", "property-declaration"],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-pascal-case",
+      "allow-leading-underscore",
+      "allow-snake-case"
+    ],
+    "jsx-no-multiline-js": false,
+    "jsx-no-lambda": false
+  }
+}
