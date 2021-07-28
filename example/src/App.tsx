@@ -14,8 +14,7 @@ export default class App extends Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    this.state = {
-    }
+    this.state = {}
   }
 
   render() {

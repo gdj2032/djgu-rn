@@ -8,6 +8,7 @@
   },
   "author": "gu1920948999@163.com",
   "license": "LIT",
-  "devDependencies": {
+  "devDependencies": {},
+  "dependencies": {
   }
 }
