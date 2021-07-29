@@ -2,7 +2,7 @@
  * 活动指示器
  */
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Animated, Easing, Modal, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Animated, Easing, Modal, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 
 interface IPickerProps {
   /**
@@ -111,13 +111,12 @@ export default class ActionSheet extends Component<IPickerProps, IState> {
         visible={visible}
         transparent
       >
-        <TouchableOpacity style={styles.modalView} activeOpacity={1} onPress={this.close} >
-          <Animated.View style={{ transform: [{ translateY: slider }] }}>
-            <TouchableOpacity style={styles.outView} activeOpacity={1} ref={c => this.viewRef = c} onPress={(e) => e.stopPropagation()} >
-              {children}
-            </TouchableOpacity>
-          </Animated.View>
-        </TouchableOpacity>
+        <TouchableOpacity style={styles.modalView} activeOpacity={1} onPress={this.close} />
+        <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, transform: [{ translateY: slider }] }}>
+          <View style={styles.outView} ref={c => this.viewRef = c} onTouchStart={(e) => e.stopPropagation()} >
+            {children}
+          </View>
+        </Animated.View>
       </Modal>
     )
   }

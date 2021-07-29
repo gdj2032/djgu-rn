@@ -2,7 +2,7 @@
  * 通用选择器
  */
 import React, { Component, ReactNode } from 'react';
-import { Text, View, StyleSheet, FlatList, TouchableOpacity, LayoutChangeEvent, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, FlatList, TouchableOpacity, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { mixins } from '../../styles';
 import ActionSheet from '../ActionSheet';
 import PickerItem from './PickerItem';
@@ -154,7 +154,7 @@ export default class Picker extends Component<IPickerProps, IState> {
       <ActionSheet
         visible={visible}
       >
-        <TouchableOpacity style={styles.outView} activeOpacity={1} onPress={(e) => e.stopPropagation()} >
+        <View style={styles.outView} >
           <View>
             {renderPickerTop && renderPickerTop()}
           </View>
@@ -169,7 +169,7 @@ export default class Picker extends Component<IPickerProps, IState> {
                     data={e}
                     value={value}
                     index={i}
-                    onChange={(idx) => onChange([i, idx])}
+                    onRowChange={(idx) => onChange([i, idx])}
                   />
                 )
               })
@@ -178,24 +178,20 @@ export default class Picker extends Component<IPickerProps, IState> {
           <View>
             {renderPickerBottom && renderPickerBottom()}
           </View>
-        </TouchableOpacity>
+        </View>
       </ActionSheet>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  modalView: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
   outView: {
     backgroundColor: 'white'
   },
   pickerView: {
     width: '100%',
     display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'space-around',
   },
 });
