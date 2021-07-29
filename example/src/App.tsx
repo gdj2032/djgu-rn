@@ -4,41 +4,12 @@ import { Picker as RNPicker } from '@react-native-picker/picker';
 import { layoutStyles, mixins } from './styles';
 import { Picker, RotationCircleView } from './components';
 
-const ParaData = [
-  [
-    {
-      "name": "2015",
-      "id": 11
-    },
-    {
-      "name": "2016",
-      "id": 12
-    },
-  ],
-  [
-    {
-      "name": "july",
-      "id": 201
-    },
-    {
-      "name": "August",
-      "id": 202
-    }
-  ],
-  [
-    {
-      "name": "1st",
-      "id": 2101
-    }
-  ]
-]
-
 interface IProps {
 }
 
 interface IState {
   visible: boolean;
-  value: number[]
+  value: string[];
   range: number[][];
 }
 
@@ -47,9 +18,9 @@ export default class App extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-      visible: false,
+      visible: true,
       // value: [1, 11],
-      value: [0],
+      value: ['2'],
       range: [[1, 2, 3, 4], [1, 2, 3, 4]],
     }
   }
@@ -57,13 +28,8 @@ export default class App extends Component<IProps, IState> {
   open = () => this.setState({ visible: true })
 
   onChange = (val) => {
-    console.log("🚀 ~ file: App.tsx ~ line 27 ~ App ~ value", val)
-    // const { value } = this.state;
-    // const v1 = val[0] === 0 ? val[1] : value[0];
-    // const v2 = val[0] === 1 ? val[1] : value[1];
-    // this.setState({ value: [v1, v2] })
-    // this.setState({ value: [val[1]] })
-    this.setState({ range: [[1, 2, 3, 4], [7, 8, 9, 0]] })
+    console.log('🚀 ~ file: App.tsx ~ line 31 ~ App ~ val', val)
+    this.setState({ value: [val[1]] })
   }
 
   render() {
@@ -72,14 +38,14 @@ export default class App extends Component<IProps, IState> {
       <View style={layoutStyles.centralContainer}>
         <Picker
           visible={visible}
-          mode='selector'
-          range={[[1, 2, 3, 4], [7, 8, 9, 0]]}
+          data={[[{ id: '1', name: '浙江省' }, { id: '2', name: '江苏省' }, { id: '3', name: '上海市' }]]}
           value={value}
           onChange={this.onChange}
-          renderPickerTop={() => <View style={{ height: 20, backgroundColor: 'red' }}><Text>renderPickerTop</Text></View>}
-          renderPickerBottom={() => <View style={{ height: 40, backgroundColor: 'red' }}><Text>renderPickerBottom</Text></View>}
+          head={() => <View style={{ height: 20, backgroundColor: 'red' }}><Text>head</Text></View>}
+          foot={() => <View style={{ height: 40, backgroundColor: 'red' }}><Text>foot</Text></View>}
+          height={mixins.zoom(200)}
         />
-        <Button title="open" onPress={this.open} color='red' />
+        <Button title='open' onPress={this.open} color='red' />
         {/* <RNPicker
           mode='dialog'
           style={{ height: 100, width: 150 }}
@@ -96,7 +62,7 @@ export default class App extends Component<IProps, IState> {
 const styles = StyleSheet.create({
   image: {
     flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
+    resizeMode: 'cover',
+    justifyContent: 'center',
   },
 });

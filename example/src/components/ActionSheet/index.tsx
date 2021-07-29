@@ -4,12 +4,12 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Animated, Easing, Modal, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 
-interface IPickerProps {
+interface IProps {
   /**
   * 是否显示选择器
   *
   * @type {boolean}
-  * @memberof IPickerProps
+  * @memberof IProps
   */
   visible: boolean;
 }
@@ -19,16 +19,16 @@ interface IState {
   height: number,
 }
 
-export default class ActionSheet extends Component<IPickerProps, IState> {
+export default class ActionSheet extends Component<IProps, IState> {
 
-  static defaultProps: IPickerProps = {
+  static defaultProps: IProps = {
     visible: false,
   }
 
   sliderValue;
   viewRef: View | null | undefined;
 
-  constructor(props: IPickerProps) {
+  constructor(props: IProps) {
     super(props)
     this.state = {
       visible: this.props.visible,
@@ -41,12 +41,11 @@ export default class ActionSheet extends Component<IPickerProps, IState> {
     this.init()
   }
 
-  async componentWillReceiveProps(nextProps) {
-    if (this.state.visible !== nextProps.visible) {
-      this.setState({ visible: nextProps.visible }, () => {
-        this.init()
-      })
+  static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
+    if (nextProps.visible !== prevState.visible) {
+      return { ...nextProps }
     }
+    return null;
   }
 
   init = async () => {
@@ -106,10 +105,10 @@ export default class ActionSheet extends Component<IPickerProps, IState> {
     })
     return (
       <Modal
-        animated
+        animated={true}
         animationType='fade'
         visible={visible}
-        transparent
+        transparent={true}
       >
         <TouchableOpacity style={styles.modalView} activeOpacity={1} onPress={this.close} />
         <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, transform: [{ translateY: slider }] }}>

@@ -2,89 +2,73 @@
  * 通用选择器
  */
 import React, { Component, ReactNode } from 'react';
-import { Text, View, StyleSheet, FlatList, TouchableOpacity, TouchableWithoutFeedback, ScrollView } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { mixins } from '../../styles';
 import ActionSheet from '../ActionSheet';
 import PickerItem from './PickerItem';
+interface IIDName {
+  id: string;
+  name: string;
+}
 
-type PICKER_MODE = 'selector' | 'multiSelector';
-
-interface IPickerProps {
+interface IProps {
   /**
   * 是否显示选择器
   *
   * @type {boolean}
-  * @memberof IPickerProps
+  * @memberof IProps
   */
   visible: boolean;
-  /**
-   * 选择器的模式
-   * selector 单列
-   * multiSelector 多列
-   *
-   * @type {PICKER_MODE}
-   * @memberof IPickerProps
-   */
-  mode: PICKER_MODE;
   /**
    * 列改变时
    * number 单列
    * number[] 多列 第几列第几个
    *
-   * @memberof IPickerProps
+   * @memberof IProps
    */
-  onChange: (num: number[]) => void;
+  onChange: (num: (number | string)[]) => void;
   /**
-   * 下标从 0 开始
-   * number 单列
-   * number[] 多列 第几列第几个
+   * string[] 第几列的id标签
+   * 默认全部取第一行
    *
-   * @default (0|[0,0,...])
-   * @type {str_num}
-   * @memberof IPickerProps
+   * @default (['1','1',...])
+   * @type {string}
+   * @memberof IProps
    */
-  value: number[];
+  value: string[];
   /**
    * 二维数组
    *
    * @type {(Array<string[]> | Array<number[]> | Array<Object[]>)}
-   * @memberof IPickerProps
+   * @memberof IProps
    */
-  range: Array<string[]> | Array<number[]> | Array<Object[]>;
-  /**
-   * 当 range 是一个 Object Array 时
-   * 通过 rangeKey 来指定 Object 中 key 的值作为选择器显示内容
-   *
-   * @type {string}
-   * @memberof IPickerProps
-   */
-  rangeKey?: string;
+  data: IIDName[][];
   /**
    * 是否禁用
    *
    * @default false
    * @type {boolean}
-   * @memberof IPickerProps
+   * @memberof IProps
    */
   disabled?: boolean;
   /**
    * 自定义picker上面显示的内容
    *
-   * @memberof IPickerProps
+   * @memberof IProps
    */
-  renderPickerTop?: () => ReactNode;
+  head?: () => ReactNode;
   /**
    * 自定义picker下面显示的内容
    *
-   * @memberof IPickerProps
+   * @memberof IProps
    */
-  renderPickerBottom?: () => ReactNode;
+  foot?: () => ReactNode;
   /**
    * picker组件高度 不包括topView和bottomView
    *
    * @default mixins.zoom(300)
    * @type {number}
-   * @memberof IPickerProps
+   * @memberof IProps
    */
   height: number;
 }
@@ -93,62 +77,35 @@ interface IState {
   visible: boolean;
 }
 
-export default class Picker extends Component<IPickerProps, IState> {
+export default class Picker extends Component<IProps, IState> {
 
-  static defaultProps: IPickerProps = {
+  static defaultProps: IProps = {
     visible: false,
-    range: [],
+    data: [],
     value: [],
-    onChange: (num: number[]) => {},
-    mode: 'selector',
+    onChange: () => {},
     height: mixins.zoom(270),
   }
 
-  private flatListRef: FlatList | null | undefined;
   private itemHeight = mixins.zoom(30);
 
 
-  constructor(props: IPickerProps) {
+  constructor(props: IProps) {
     super(props)
     this.state = {
       visible: this.props.visible,
     }
   }
 
-  componentDidMount() {
-    this.scroll(this.props.visible)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.state.visible !== nextProps.visible) {
-      this.setState({ visible: nextProps.visible })
-      this.scroll(nextProps.visible)
+  static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
+    if (nextProps.visible !== prevState.visible) {
+      return { ...nextProps }
     }
-  }
-
-  scroll = (visible) => {
-    if (!visible) return;
-    this.flatListRef?.scrollToIndex({ animated: true, index: 0 })
-  }
-
-  getItem = (size: 'small' | 'big') => {
-    const { range, value } = this.props;
-    if (range.length == 0) {
-      return false;
-    }
-    return range.map((item, i) => {
-      return (
-        <View key={i} style={{ height: this.itemHeight, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ fontSize: size == 'big' ? mixins.zoom(24) : mixins.zoom(16), color: size == 'big' ? '#4a4a4a' : '#a0a0a0', backgroundColor: 'rgba(0,0,0,0)' }}>
-            {value ? item[value[i]] : item}
-          </Text>
-        </View>
-      )
-    })
+    return null;
   }
 
   render() {
-    const { mode, onChange, value, range, rangeKey, disabled, renderPickerTop, renderPickerBottom, height } = this.props;
+    const { onChange, value, data, disabled, head, foot, height } = this.props;
     const { visible } = this.state;
     return (
       <ActionSheet
@@ -156,27 +113,27 @@ export default class Picker extends Component<IPickerProps, IState> {
       >
         <View style={styles.outView} >
           <View>
-            {renderPickerTop && renderPickerTop()}
+            {head && head()}
           </View>
           <View style={[styles.pickerView, { height }]}>
             {
-              range.map((e, i) => {
+              data.map((e, i) => {
                 return (
                   <PickerItem
-                    key={i}
+                    key={JSON.stringify(e)}
                     itemHeight={this.itemHeight}
                     height={height}
                     data={e}
-                    value={value}
-                    index={i}
-                    onRowChange={(idx) => onChange([i, idx])}
+                    value={value[i]}
+                    col={i}
+                    onRowChange={(id) => onChange([i, id])}
                   />
                 )
               })
             }
           </View>
           <View>
-            {renderPickerBottom && renderPickerBottom()}
+            {foot && foot()}
           </View>
         </View>
       </ActionSheet>
